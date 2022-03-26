@@ -1,1 +1,4 @@
-{"rules": {"style": "off"}, "root": true}
+{"rules": 
+	{"style": "off"},              
+       	"root": true
+}
