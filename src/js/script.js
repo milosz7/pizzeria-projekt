@@ -60,7 +60,10 @@
       thisProduct.id = id;
       thisProduct.data = data;
       thisProduct.renderInMenu();
+      thisProduct.getElements();
       thisProduct.initAccordeon();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
       console.log('new Product:', thisProduct);
     }
 
@@ -72,11 +75,19 @@
       menuContainer.appendChild(thisProduct.element);
     }
 
+    getElements() {
+      const thisProduct = this;
+      thisProduct.accordeonTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.element.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+    }
+
     initAccordeon() {
       const thisProduct = this;
-      const clickHandler = thisProduct.element.querySelector(select.menuProduct.clickable);
       const classActive = classNames.menuProduct.wrapperActive;
-      clickHandler.addEventListener('click', function (evt) {
+      thisProduct.accordeonTrigger.addEventListener('click', function (evt) {
         evt.preventDefault();
         const activeProduct = document.querySelector(select.all.menuProductsActive);
         if (!thisProduct.element.classList.contains(classActive) && activeProduct) {
@@ -84,6 +95,43 @@
         }
         thisProduct.element.classList.toggle(classActive);
       });
+    }
+
+    initOrderForm() {
+      const thisProduct = this;
+      thisProduct.form.addEventListener('submit', function(evt) {
+        evt.preventDefault();
+        thisProduct.processOrder();
+      });
+      for (let input of thisProduct.formInputs) {
+        input.addEventListener('change', function() {
+          thisProduct.processOrder();
+        });
+      }
+      thisProduct.cartButton.addEventListener('click', function(evt) {
+        evt.preventDefault();
+        thisProduct.processOrder();
+      });
+    }
+
+    processOrder() {
+      const thisProduct = this;
+      const serializedForm = utils.serializeFormToObject(thisProduct.form);
+      let productPrice = thisProduct.data.price;
+      for (let param in thisProduct.data.params) {
+        const paramId = serializedForm[param];
+        const paramToCheck = thisProduct.data.params[param];
+        for (let option in paramToCheck.options) {
+          const optionToCheck = paramToCheck.options[option];
+          if (optionToCheck.hasOwnProperty('default') && !paramId.includes(option)) {
+            productPrice = (productPrice - optionToCheck.price); 
+          }
+          if (!optionToCheck.hasOwnProperty('default') && paramId.includes(option)) {
+            productPrice = (productPrice + optionToCheck.price);
+          }
+        }
+      }
+      thisProduct.priceElem.innerHTML = productPrice;
     }
   }
 
