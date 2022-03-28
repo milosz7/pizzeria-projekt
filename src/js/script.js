@@ -64,7 +64,6 @@
       thisProduct.initAccordeon();
       thisProduct.initOrderForm();
       thisProduct.processOrder();
-      console.log('new Product:', thisProduct);
     }
 
     renderInMenu() {
@@ -82,6 +81,7 @@
       thisProduct.formInputs = thisProduct.element.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordeon() {
@@ -119,15 +119,20 @@
       const serializedForm = utils.serializeFormToObject(thisProduct.form);
       let productPrice = thisProduct.data.price;
       for (let param in thisProduct.data.params) {
-        const paramId = serializedForm[param];
+        const selectedParams = serializedForm[param];
         const paramToCheck = thisProduct.data.params[param];
         for (let option in paramToCheck.options) {
           const optionToCheck = paramToCheck.options[option];
-          if (optionToCheck.hasOwnProperty('default') && !paramId.includes(option)) {
-            productPrice = (productPrice - optionToCheck.price); 
-          }
-          if (!optionToCheck.hasOwnProperty('default') && paramId.includes(option)) {
+          const productImage = thisProduct.imageWrapper.querySelector(`.${param}-${option}`);
+          if (optionToCheck.hasOwnProperty('default') && !selectedParams.includes(option)) {
+            productPrice = (productPrice - optionToCheck.price);
+          } else if (!optionToCheck.hasOwnProperty('default') && selectedParams.includes(option)) {
             productPrice = (productPrice + optionToCheck.price);
+          }
+          if (selectedParams.includes(option) && productImage) {
+            productImage.classList.add(classNames.menuProduct.imageVisible); 
+          } else if (!selectedParams.includes(option) && productImage) {
+            productImage.classList.remove(classNames.menuProduct.imageVisible);
           }
         }
       }
