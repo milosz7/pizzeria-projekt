@@ -70,7 +70,6 @@
       }
 
     }
-
   }
 
   &__product { // CODE CHANGED
@@ -152,8 +151,12 @@
     input, button {
       width: 100%;
       margin-bottom: ($base-size / 2);
+      
+      &.error {
+        border-color: $color-error;
+      }
     }
-
+  
   }
 
 }
