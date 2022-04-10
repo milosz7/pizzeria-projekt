@@ -1,5 +1,9 @@
 .header {
-  padding: ($base-size * 5) 0;
+  display: block;
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  padding: ($base-size * 2) 0;
   background: $color-dark;
   color: $color-light;
 

@@ -244,7 +244,8 @@
 
     prepareCartElement() {
       const thisProduct = this;
-      const generatedHTML = templates.cartProduct(thisProduct.prepareCartProduct());
+      const productToAdd = thisProduct.prepareCartProduct();
+      const generatedHTML = templates.cartProduct(productToAdd);
       const cartElement = utils.createDOMFromHTML(generatedHTML);
       app.cart.addProduct(cartElement, thisProduct.prepareCartProduct());
     }
@@ -311,6 +312,7 @@
       const thisCart = this;
       thisCart.getElements(element);
       thisCart.initCartActions();
+      thisCart.detectErrors();
       thisCart.products = [];
     }
     
@@ -331,7 +333,18 @@
         phone: element.querySelector(select.cart.phone),
         address: element.querySelector(select.cart.address),
       };
-      
+
+    }
+
+    toggleScrolling() {
+      const thisCart = this;
+      const cartHeight = thisCart.dom.wrapper.getBoundingClientRect().height;
+      const windowHeight = window.innerHeight;
+      if (windowHeight < cartHeight) {
+        thisCart.dom.wrapper.classList.add('scrollable');
+      } else if (windowHeight >= cartHeight) {
+        thisCart.dom.wrapper.classList.remove('scrollable');
+      }
     }
 
     initCartActions() {
@@ -362,6 +375,8 @@
       thisCart.dom.productList.appendChild(element);
       thisCart.update();
       thisCart.detectErrors();
+      thisCart.visualUpdate();
+      thisCart.toggleScrolling();
     }
 
     update() {
@@ -399,6 +414,8 @@
       thisCart.products.splice(productToRemoveID, 1);
       thisCart.update();
       thisCart.detectErrors();
+      thisCart.visualUpdate();
+      thisCart.toggleScrolling();
     }
 
     sendOrder() {
@@ -442,6 +459,14 @@
           thisCart.dom.formSubmit.disabled = true;
         }
       }
+    }
+
+    visualUpdate() {
+      const thisCart = this;
+      thisCart.dom.wrapper.classList.add('processing');
+      setTimeout(function() {
+        thisCart.dom.wrapper.classList.remove('processing');
+      }, 500);
     }
 
     checkInputs() {
@@ -561,5 +586,5 @@
     },
   };
 
-  app.init();  
+  app.init();
 }
