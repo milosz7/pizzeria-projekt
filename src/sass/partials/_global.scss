@@ -17,3 +17,11 @@ body {
   margin: 0 auto;
   padding: 0 20px;
 }
+
+section {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}

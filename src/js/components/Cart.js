@@ -35,7 +35,6 @@ class Cart {
     const thisCart = this;
     const cartHeight = thisCart.dom.cartHeight.getBoundingClientRect().height + 24;
     const windowHeight = window.innerHeight;
-    console.log(windowHeight, cartHeight);
     if (windowHeight >= cartHeight) {
       thisCart.dom.wrapper.classList.remove(classNames.cart.scrollable);
     } else if (windowHeight < cartHeight) {
