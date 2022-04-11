@@ -39,6 +39,12 @@ const app = {
     }
   },
 
+  initBooking: function () {
+    const thisApp = this;
+    const bookingContainer = document.querySelector(select.containerOf.booking);
+    thisApp.booking = new Booking(bookingContainer);
+  },
+
   initData: function () {
     const thisApp = this;
     const url = `${settings.db.url}/${settings.db.products}`;
@@ -71,6 +77,7 @@ const app = {
     thisApp.initData();
     thisApp.initCart();
     thisApp.initPages();
+    thisApp.initBooking();
   },
 };
 
