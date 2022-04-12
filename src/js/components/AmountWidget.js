@@ -1,58 +1,44 @@
 import {settings, select} from '../settings.js';
+import BaseWidget from './BaseWidget.js';
 
-class AmountWidget {
+class AmountWidget extends BaseWidget {
   constructor(element) {
+    super(element, settings.amountWidget.defaultValue);
     const thisWidget = this;
-    thisWidget.getElements(element);
-    if (!thisWidget.input.value) {
-      thisWidget.setValue(settings.amountWidget.defaultValue);
-    } else {
-      thisWidget.setValue(thisWidget.input.value);
-    }
+    thisWidget.getElements();
+    thisWidget.value = thisWidget.correctValue;
     thisWidget.initWidgetControls();
   }
 
-  getElements(element) {
+  getElements() {
     const thisWidget = this;
-    thisWidget.element = element;
-    thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
-    thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
-    thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+    thisWidget.dom.input = thisWidget.dom.wrapper.querySelector(select.widgets.amount.input);
+    thisWidget.dom.linkIncrease = thisWidget.dom.wrapper.querySelector(select.widgets.amount.linkIncrease);
+    thisWidget.dom.linkDecrease = thisWidget.dom.wrapper.querySelector(select.widgets.amount.linkDecrease);
   }
 
   initWidgetControls() {
     const thisWidget = this;
-    thisWidget.input.addEventListener('change', function() {
-      thisWidget.setValue(thisWidget.input.value);
+    thisWidget.dom.input.addEventListener('change', function() {
+      thisWidget.value = thisWidget.dom.input.value;
     });
-    thisWidget.linkIncrease.addEventListener('click', function() {
+    thisWidget.dom.linkIncrease.addEventListener('click', function() {
       thisWidget.setValue(thisWidget.value + 1);
     });
-    thisWidget.linkDecrease.addEventListener('click', function() {
+    thisWidget.dom.linkDecrease.addEventListener('click', function() {
       thisWidget.setValue(thisWidget.value - 1);
     });
   }
 
-  announce() {
-    const thisWidget = this;
-
-    const evt = new CustomEvent('update', {
-      bubbles: true
-    });
-    thisWidget.element.dispatchEvent(evt);
-  }
-
-  setValue(value) {
-    const thisWidget = this;
-    const newValue = parseInt(value, 10);
+  isValid (value) {
     const minValue = settings.amountWidget.defaultMin;
     const maxValue = settings.amountWidget.defaultMax;
+    return minValue <= value && value <= maxValue && !isNaN(value); 
+  }
 
-    if (thisWidget.value !== newValue && !isNaN(newValue) && minValue <= newValue && newValue <= maxValue) {
-      thisWidget.value = newValue;
-    }
-    thisWidget.input.value = thisWidget.value;
-    thisWidget.announce(); 
+  renderValue() {
+    const thisWidget = this;
+    thisWidget.dom.input.value = thisWidget.value;
   }
 }
 
