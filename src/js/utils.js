@@ -74,7 +74,6 @@ utils.displayError = function(error) {
 };
 
 utils.handleErrors = function(response) {
-  debugger;
   if (!response.ok) {
     const errorToDisplay = `${response.statusText} (${response.status})`;
     utils.displayError(errorToDisplay);
