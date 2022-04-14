@@ -1,5 +1,6 @@
 import {select, classNames, settings} from '../settings.js';
 import CartProduct from './CartProduct.js';
+import utils from '../utils.js';
 
 class Cart {
   constructor(element) {
@@ -44,11 +45,12 @@ class Cart {
 
   initCartActions() {
     const thisCart = this;
+    const cartExpandTime = 250;
     thisCart.dom.toggleTrigger.addEventListener('click', function() {
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       setTimeout(function() {
         thisCart.toggleScrolling();
-      }, 250);
+      }, cartExpandTime);
     });
     thisCart.dom.productList.addEventListener('update', function(){
       thisCart.update();
@@ -138,8 +140,14 @@ class Cart {
       },
       body: JSON.stringify(payload),
     };
-    fetch(url, options);
+    fetch(url, options)
+      .then(utils.handleErrors)
+      .catch(function(error) {
+        console.log(error);
+      });
   }
+
+ 
 
   detectErrors() {
     const thisCart = this;
@@ -147,9 +155,9 @@ class Cart {
       const inputLimitLocation = input.getAttribute('name') + 'LengthMin';
       const inputMin = settings.cart[inputLimitLocation];
       if (input.value.length < inputMin) {
-        input.classList.add('error');
+        input.classList.add(classNames.cart.error);
       } else if (input.value.length >= inputMin) {
-        input.classList.remove('error');
+        input.classList.remove(classNames.cart.error);
       }
       if (!thisCart.checkInputs() && thisCart.products.length !== 0) {
         thisCart.dom.formSubmit.disabled = false;

@@ -67,6 +67,11 @@ export const select = {
     edit: '[href="#edit"]',
     remove: '[href="#remove"]',
   },
+  errorBox: {
+    wrapper: '.error-message',
+    text: '.error-text',
+    closingButton: '.close-error'
+  }
 };
 
 export const classNames = {
@@ -90,6 +95,9 @@ export const classNames = {
   pages: {
     active: 'active',
   },
+  error: {
+    active: 'active',
+  }
 };
 
 export const settings = {

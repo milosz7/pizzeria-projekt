@@ -1,3 +1,5 @@
+import {select, classNames} from './settings.js';
+
 const utils = {};
 
 utils.createDOMFromHTML = function(htmlString) {
@@ -58,6 +60,29 @@ utils.addDays = function(dateStr, days){
   dateObj.setDate(dateObj.getDate() + days);
   return dateObj;
 };
+
+utils.displayError = function(error) {
+  const errorBox = document.querySelector(select.errorBox.wrapper);
+  const errorText = errorBox.querySelector(select.errorBox.text);
+  const errorClose = errorBox.querySelector(select.errorBox.closingButton);
+  errorText.innerHTML ='Error: ' + error;
+  errorBox.classList.add(classNames.error.active);
+  errorClose.addEventListener('click', function(e) {
+    e.preventDefault();
+    errorBox.classList.remove(classNames.error.active);
+  });
+};
+
+utils.handleErrors = function(response) {
+  debugger;
+  if (!response.ok) {
+    const errorToDisplay = `${response.statusText} (${response.status})`;
+    utils.displayError(errorToDisplay);
+  }
+  return response;
+};
+
+
 
 // utils.convertDataSourceToDbJson = function(){
 //   const productJson = [];

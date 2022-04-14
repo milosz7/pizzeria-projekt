@@ -1,4 +1,5 @@
 import {settings, select, classNames} from './settings.js';
+import utils from './utils.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
 import Booking from './components/Booking.js';
@@ -50,10 +51,14 @@ const app = {
     const url = `${settings.db.url}/${settings.db.products}`;
     thisApp.data = {};
     fetch(url)
+      .then(utils.handleErrors)
       .then(rawResponse => rawResponse.json())
       .then(parsedResponse => {
         thisApp.data.products = parsedResponse;
         thisApp.initMenu();
+      })
+      .catch(function(error) {
+        console.log(error);
       }); 
   },
   initMenu: function () {
