@@ -1,4 +1,4 @@
-import {select, classNames, settings} from '../settings.js';
+import {select, classNames, settings, delays} from '../settings.js';
 import CartProduct from './CartProduct.js';
 import utils from '../utils.js';
 
@@ -45,12 +45,11 @@ class Cart {
 
   initCartActions() {
     const thisCart = this;
-    const cartExpandTime = 250;
     thisCart.dom.toggleTrigger.addEventListener('click', function() {
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       setTimeout(function() {
         thisCart.toggleScrolling();
-      }, cartExpandTime);
+      }, delays.cartExpandTime);
     });
     thisCart.dom.productList.addEventListener('update', function(){
       thisCart.update();
@@ -172,7 +171,7 @@ class Cart {
     thisCart.dom.wrapper.classList.add(classNames.cart.processing);
     setTimeout(function() {
       thisCart.dom.wrapper.classList.remove(classNames.cart.processing);
-    }, 500);
+    }, delays.cartAnimationDelay);
   }
 
   checkInputs() {
