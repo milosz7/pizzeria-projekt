@@ -11,7 +11,6 @@ class Booking {
     thisBooking.renderPage();
     thisBooking.getElements();
     thisBooking.initWidgets();
-    console.log(thisBooking);
     thisBooking.getData();
 
   }
@@ -32,7 +31,6 @@ class Booking {
       buttonSubmit: thisBooking.wrapper.querySelector(select.booking.form.submitButton),
       starters: thisBooking.wrapper.querySelectorAll(select.booking.form.starters),
     };
-    console.log(thisBooking.dom);
   }
 
   getData() {
@@ -84,7 +82,6 @@ class Booking {
   parseData(bookings, eventsCurrent, eventsRepeat) {
     const thisBooking = this;
     thisBooking.booked = {};
-    console.log(bookings, eventsCurrent, eventsRepeat);
     for (let data of bookings) {
       thisBooking.prepareBooked(data.date, data.hour, data.duration, data.table);
     }
