@@ -1,4 +1,4 @@
-import {select, classNames} from './settings.js';
+import {select, classNames, delays} from './settings.js';
 
 const utils = {};
 
@@ -62,15 +62,18 @@ utils.addDays = function(dateStr, days){
 };
 
 utils.displayError = function(error) {
-  const errorBox = document.querySelector(select.errorBox.wrapper);
-  const errorText = errorBox.querySelector(select.errorBox.text);
-  const errorClose = errorBox.querySelector(select.errorBox.closingButton);
-  errorText.innerHTML ='Error: ' + error;
-  errorBox.classList.add(classNames.error.active);
-  errorClose.addEventListener('click', function(e) {
+  const messageBox = document.querySelector(select.messageBox.wrapper);
+  const messageText = messageBox.querySelector(select.messageBox.text);
+  const messageClose = messageBox.querySelector(select.messageBox.closingButton);
+  messageText.innerHTML ='Error: ' + error;
+  messageBox.classList.add(classNames.error.active, classNames.error.danger);
+  messageClose.addEventListener('click', function(e) {
     e.preventDefault();
-    errorBox.classList.remove(classNames.error.active);
+    messageBox.classList.remove(classNames.error.active, classNames.error.danger);
   });
+  setTimeout(function() {
+    messageBox.classList.remove(classNames.error.active, classNames.error.danger);
+  }, delays.messageMaxDisplay);
 };
 
 utils.handleErrors = function(response) {
@@ -81,7 +84,20 @@ utils.handleErrors = function(response) {
   return response;
 };
 
-
+utils.displaySuccess = function(message) {
+  const messageBox = document.querySelector(select.messageBox.wrapper);
+  const messageText = messageBox.querySelector(select.messageBox.text);
+  const messageClose = messageBox.querySelector(select.messageBox.closingButton);
+  messageText.innerHTML = message;
+  messageBox.classList.add(classNames.confirmation.active, classNames.confirmation.success);
+  messageClose.addEventListener('click', function(e) {
+    e.preventDefault();
+    messageBox.classList.remove(classNames.confirmation.active, classNames.confirmation.success);
+  });
+  setTimeout(function() {
+    messageBox.classList.remove(classNames.confirmation.active, classNames.confirmation.success);
+  }, delays.messageMaxDisplay);
+};
 
 // utils.convertDataSourceToDbJson = function(){
 //   const productJson = [];

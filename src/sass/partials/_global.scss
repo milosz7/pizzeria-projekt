@@ -26,7 +26,7 @@ section {
   }
 }
 
-.error-message {
+.message-box {
   opacity: 0;
   border-radius: $radius;
   font-family: $font-text;
@@ -37,13 +37,21 @@ section {
   transform: translateX(-50%);
   top: 0;
   z-index: 10000;
-  background-color: $color-error;
   color: $color-light;
   height: 50px;
   transition: opacity 0.5s;
+  background-color: $color-fadeout;
 
   &.active {
     opacity: 1; 
+  }
+
+  &.danger {
+    background-color: $color-error;
+  }
+
+  &.success {
+    background: $color-success;
   }
 }
 
