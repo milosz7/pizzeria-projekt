@@ -43,6 +43,12 @@ export const select = {
     peopleAmount: '.people-amount',
     hoursAmount: '.hours-amount',
     tables: '.floor-plan .table',
+    form: {
+      phone: '[name="phone"]',
+      address: '[name="address"]',
+      submitButton: '[type="submit"]',
+      starters: '[name="starter"]',
+    },
   },
   nav: {
     links: '.main-nav a',
@@ -67,8 +73,8 @@ export const select = {
     edit: '[href="#edit"]',
     remove: '[href="#remove"]',
   },
-  errorBox: {
-    wrapper: '.error-message',
+  messageBox: {
+    wrapper: '.message-box',
     text: '.error-text',
     closingButton: '.close-error'
   }
@@ -88,6 +94,7 @@ export const classNames = {
   booking: {
     loading: 'loading',
     tableBooked: 'booked',
+    selected: 'selected',
   },
   nav: {
     active: 'active',
@@ -97,7 +104,13 @@ export const classNames = {
   },
   error: {
     active: 'active',
-  }
+    danger: 'danger',
+  },
+  confirmation: {
+    active: 'active',
+    success: 'success',
+  },
+
 };
 
 export const settings = {
@@ -132,6 +145,13 @@ export const settings = {
   booking: {
     tableIdAttribute: 'data-table',
   },
+};
+
+export const delays = {
+  messageMaxDisplay: 1500,
+  sliderDelay: 200,
+  cartAnimationDelay: 500,
+  cartExpandTime: 250,
 };
 
 export const templates = {
