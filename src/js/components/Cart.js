@@ -142,7 +142,7 @@ class Cart {
     fetch(url, options)
       .then(utils.handleErrors)
       .catch(function(error) {
-        console.log(error);
+        utils.displayError(error);
       });
   }
 

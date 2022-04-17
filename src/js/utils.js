@@ -65,7 +65,7 @@ utils.displayError = function(error) {
   const messageBox = document.querySelector(select.messageBox.wrapper);
   const messageText = messageBox.querySelector(select.messageBox.text);
   const messageClose = messageBox.querySelector(select.messageBox.closingButton);
-  messageText.innerHTML ='Error: ' + error;
+  messageText.innerHTML = error;
   messageBox.classList.add(classNames.error.active, classNames.error.danger);
   messageClose.addEventListener('click', function(e) {
     e.preventDefault();
@@ -79,9 +79,9 @@ utils.displayError = function(error) {
 utils.handleErrors = function(response) {
   if (!response.ok) {
     const errorToDisplay = `${response.statusText} (${response.status})`;
-    utils.displayError(errorToDisplay);
+    return Promise.reject(errorToDisplay);
   }
-  return response;
+  return response.json();
 };
 
 utils.displaySuccess = function(message) {

@@ -3,6 +3,7 @@ import utils from './utils.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
 import Booking from './components/Booking.js';
+import Home from './components/Home.js';
 
 const app = {
   initPages: function() {
@@ -27,6 +28,12 @@ const app = {
       });
       
     }
+    const pagesContainer = document.querySelector(select.containerOf.pages);
+    pagesContainer.addEventListener('changePage', function(evt) {
+      const pageID = evt.detail.pageToDisplay;
+      app.activatePage(pageID);
+      window.location.hash = `#/${pageID}`;
+    });
   },
 
   activatePage: function(pageID) {
@@ -52,13 +59,12 @@ const app = {
     thisApp.data = {};
     fetch(url)
       .then(utils.handleErrors)
-      .then(rawResponse => rawResponse.json())
       .then(parsedResponse => {
         thisApp.data.products = parsedResponse;
         thisApp.initMenu();
       })
       .catch(function(error) {
-        console.log(error);
+        utils.displayError(error);
       }); 
   },
   initMenu: function () {
@@ -83,6 +89,7 @@ const app = {
     thisApp.initCart();
     thisApp.initPages();
     thisApp.initBooking();
+    thisApp.initHome();
   },
 };
 
