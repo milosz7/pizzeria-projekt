@@ -14,6 +14,7 @@ class DatePicker extends BaseWidget{
     const thisWidget = this;
 
     thisWidget.minDate = new Date();
+    thisWidget.ifMonday(thisWidget.minDate);
     thisWidget.maxDate = utils.addDays(thisWidget.minDate, settings.datePicker.maxDaysInFuture);
     // eslint-disable-next-line no-undef
     flatpickr(thisWidget.dom.input, {
@@ -43,6 +44,15 @@ class DatePicker extends BaseWidget{
 
   renderValue(){
 
+  }
+
+  ifMonday(date) {
+    const thisWidget = this;
+    if (date.getDay() === 1) {
+      thisWidget.minDate = utils.addDays(date, 1);
+    } else {
+      thisWidget.minDate = date;
+    }
   }
 }
 
