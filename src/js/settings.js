@@ -133,7 +133,7 @@ export const settings = {
     addressLengthMin: 5,
   },
   db: {
-    url: '//localhost:3131',
+    url: '//' + window.location.hostname + (window.location.hostname=='localhost' ? ':3131' : ''),
     products: 'products',
     orders: 'orders',
     events: 'events',
