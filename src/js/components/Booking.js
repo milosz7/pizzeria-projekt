@@ -138,6 +138,7 @@ class Booking {
 
   updateDOM() {
     const thisBooking = this;
+    thisBooking.tableBooked = false;
     for (let table of thisBooking.dom.tables) {
       table.classList.remove(classNames.booking.tableBooked);
       table.classList.remove(classNames.booking.selected);
@@ -165,9 +166,7 @@ class Booking {
   updateSlider(date) {
     const thisBooking = this;
     const sliderElem = thisBooking.wrapper.querySelector(select.widgets.hourPicker.sliderElem);
-    console.log(sliderElem);
     const hourRange = settings.hours.close - settings.hours.open;
-    console.log(thisBooking.booked[date]);
     let sliderStyle = '';
     for (let i = settings.hours.open; i <= settings.hours.close; i += 0.5) {
       const hourToCheck = thisBooking.booked[date][i];
@@ -201,7 +200,7 @@ class Booking {
     const thisBooking = this;
     if (tableElement.classList.contains(classNames.booking.selected)) {
       tableElement.classList.toggle(classNames.booking.selected);
-      thisBooking.selectedTable = null;
+      thisBooking.selectedTable = false;
     } 
     else if (!tableElement.classList.contains(classNames.booking.tableBooked)) {
       for (let table of thisBooking.dom.tables) {
@@ -219,7 +218,7 @@ class Booking {
     thisBooking.dom.phoneInput.classList.toggle(classNames.booking.error, !thisBooking.dom.phoneInput.value.match(/^\d{9}$/));
     thisBooking.dom.addressInput.classList.toggle(classNames.booking.error, thisBooking.dom.addressInput.value.length < 5);
     if (!thisBooking.dom.phoneInput.value.match(/^\d{9}$/)  ||
-       (!thisBooking.selectedTable) || 
+       (thisBooking.selectedTable === false) || 
        (thisBooking.dom.addressInput.value.length < 5)) {
       thisBooking.dom.buttonSubmit.disabled = true;
     } else {
