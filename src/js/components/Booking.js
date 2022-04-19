@@ -12,7 +12,7 @@ class Booking {
     thisBooking.getElements();
     thisBooking.initWidgets();
     thisBooking.getData();
-
+    thisBooking.initValidation();
   }
 
   getElements() {
@@ -138,12 +138,12 @@ class Booking {
 
   updateDOM() {
     const thisBooking = this;
-    thisBooking.selectedTable = null;
     for (let table of thisBooking.dom.tables) {
       table.classList.remove(classNames.booking.tableBooked);
       table.classList.remove(classNames.booking.selected);
     }
     const chosenDate = thisBooking.datePickerWidget.dom.input.value;
+    thisBooking.updateSlider(chosenDate);
     const reservationStart = utils.hourToNumber(thisBooking.dom.hourOutput.innerHTML);
     const reservationEnd = reservationStart + parseInt(thisBooking.hoursAmountWidget.dom.input.value, 10);
     for (let table of thisBooking.dom.tables) {
@@ -155,11 +155,46 @@ class Booking {
         }
       }
     }
-    if(reservationEnd > 24 || reservationEnd < 12) {
+    if(reservationEnd > settings.hours.close || reservationEnd < settings.hours.open) {
       for (let table of thisBooking.dom.tables) {
         table.classList.add(classNames.booking.tableBooked);
       }
     }
+  }
+
+  updateSlider(date) {
+    const thisBooking = this;
+    const sliderElem = thisBooking.wrapper.querySelector(select.widgets.hourPicker.sliderElem);
+    console.log(sliderElem);
+    const hourRange = settings.hours.close - settings.hours.open;
+    console.log(thisBooking.booked[date]);
+    let sliderStyle = '';
+    for (let i = settings.hours.open; i <= settings.hours.close; i += 0.5) {
+      const hourToCheck = thisBooking.booked[date][i];
+      const numberOfTables = settings.booking.numberOfTables;
+      const rangeStart = Math.round((i - hourRange) / hourRange * 100);
+      const rangeEnd = Math.round((i + 0.5 - hourRange) / hourRange * 100);
+      if (hourToCheck && hourToCheck.length < numberOfTables - 1 || hourToCheck === undefined) {
+        if (rangeEnd < settings.hours.maxPercentage) {
+          sliderStyle += `green ${rangeStart}% ${rangeEnd}%, `;
+        } else if (rangeEnd === settings.hours.maxPercentage) {
+          sliderStyle += `green ${rangeStart}%`;
+        }
+      } else if (hourToCheck && hourToCheck.length < numberOfTables) {
+        if (rangeEnd < settings.hours.maxPercentage) {
+          sliderStyle += `yellow ${rangeStart}% ${rangeEnd}%, `;
+        } else if (rangeEnd === settings.hours.maxPercentage) {
+          sliderStyle += `yellow ${rangeStart}%`;
+        }
+      } else if (hourToCheck && hourToCheck.length === numberOfTables) {
+        if (rangeEnd < settings.hours.maxPercentage) {
+          sliderStyle += `red ${rangeStart}% ${rangeEnd}%, `;
+        } else if (rangeEnd === settings.hours.maxPercentage) {
+          sliderStyle += `red ${rangeStart}%`;
+        }
+      }
+    }
+    sliderElem.style.background = 'linear-gradient(90deg, ' + sliderStyle + ')';
   }
 
   chooseTable(tableElement) {
@@ -176,6 +211,31 @@ class Booking {
     } else {
       utils.displayError('Table is unavailable.');
     }
+    thisBooking.validateBooking();
+  }
+
+  validateBooking() {
+    const thisBooking = this;
+    thisBooking.dom.phoneInput.classList.toggle(classNames.booking.error, !thisBooking.dom.phoneInput.value.match(/^\d{9}$/));
+    thisBooking.dom.addressInput.classList.toggle(classNames.booking.error, thisBooking.dom.addressInput.value.length < 5);
+    if (!thisBooking.dom.phoneInput.value.match(/^\d{9}$/)  ||
+       (!thisBooking.selectedTable) || 
+       (thisBooking.dom.addressInput.value.length < 5)) {
+      thisBooking.dom.buttonSubmit.disabled = true;
+    } else {
+      thisBooking.dom.buttonSubmit.disabled = false;
+    }
+  }
+
+  initValidation() {
+    const thisBooking = this;
+    thisBooking.dom.phoneInput.addEventListener('change', function() {
+      thisBooking.validateBooking();
+    });
+    thisBooking.dom.addressInput.addEventListener('change', function() {
+      thisBooking.validateBooking();
+    });
+    thisBooking.validateBooking();
   }
 
   sendBooking() {
@@ -240,6 +300,7 @@ class Booking {
     thisBooking.wrapper.addEventListener('update', function() {
       setTimeout(function() {
         thisBooking.updateDOM();
+        thisBooking.validateBooking();
       }, delays.sliderDelay);
     });
     thisBooking.dom.buttonSubmit.addEventListener('click', function(e) {

@@ -39,6 +39,7 @@ export const select = {
       wrapper: '.hour-picker',
       input: 'input[type="range"]',
       output: '.output',
+      sliderElem: '.rangeSlider',
     },
   },
   booking: {
@@ -103,6 +104,7 @@ export const classNames = {
     loading: 'loading',
     tableBooked: 'booked',
     selected: 'selected',
+    error: 'error'
   },
   nav: {
     active: 'active',
@@ -147,12 +149,14 @@ export const settings = {
   hours: {
     open: 12,
     close: 24,
+    maxPercentage: 100,
   },
   datePicker: {
     maxDaysInFuture: 14,
   },
   booking: {
     tableIdAttribute: 'data-table',
+    numberOfTables: 3,
   },
 };
 
