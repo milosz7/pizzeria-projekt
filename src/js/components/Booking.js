@@ -65,6 +65,11 @@ class Booking {
       fetch(urls.eventsRepeat)
     ])
       .then(rawResponses => {
+        for (let response of rawResponses) {
+          if (!response.ok) {
+            throw new Error(`${response.statusText} (${response.status})`);
+          }
+        }
         const bookingsRaw = rawResponses[0];
         const eventsCurrentRaw = rawResponses[1];
         const eventsRepeatRaw = rawResponses[2];
@@ -76,6 +81,9 @@ class Booking {
       })
       .then(function([bookings, eventsCurrent, eventsRepeat]) {
         thisBooking.parseData(bookings, eventsCurrent, eventsRepeat);
+      })
+      .catch(function(error) {
+        utils.displayError(error);
       });
   }
 
@@ -200,16 +208,13 @@ class Booking {
 
     fetch(url, options)
       .then(utils.handleErrors)
-      .then(function(response) {
-        if (response.ok) {
-          const bookingConfirmation = 'Table succesfully booked!';
-          utils.displaySuccess(bookingConfirmation);
-        }
+      .then(function() {
+        const bookingConfirmation = 'Table succesfully booked!';
+        utils.displaySuccess(bookingConfirmation);
         thisBooking.getData();
-        return response;
       })
       .catch(function(error) {
-        console.log(error);
+        utils.displayError(error);
       }); 
   }
 
