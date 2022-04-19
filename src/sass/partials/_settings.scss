@@ -114,3 +114,65 @@ $base-size: 12px;
     transform: rotateX(0deg);
   }
 }
+
+@keyframes button-text-appear {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes button-animation-in {
+  0% {
+    transform: translate(-50%, -25%);
+  }
+
+  100% {
+    transform: translate(-50%, -60%);
+  }
+}
+
+@keyframes button-text-disappear {
+  100% {
+    opacity: 0;
+  }
+  
+  0% {
+    opacity: 1;
+  }
+}
+
+@keyframes button-animation-out {
+  100% {
+    transform: translate(-50%, -25%);
+  }
+
+  0% {
+    transform: translate(-50%, -60%);
+  }
+}
+
+@keyframes icon-transition {
+  0% {
+    color: $color-light;
+    opacity: 0;
+  }
+
+  100% {
+    color: $color-main;
+    opacity: 1;
+  }
+}
+
+@keyframes image-fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}

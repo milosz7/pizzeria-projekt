@@ -1,0 +1,151 @@
+.home-wrapper {
+  background: $color-light;
+  margin-top: $base-size * 3.5;
+  padding: $base-size * 6 $base-size * 4;
+} 
+
+
+.home__nav {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-areas: "order booking" "hours hours";
+  gap: $base-size * 0.5;
+  color: $color-light;
+  text-align: center;
+
+  h1 {
+    font-family: $font-header;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+  
+}
+
+.btn-image {
+  height: 125px;
+  border-radius: $radius;
+  position: relative;
+  
+  &--order {
+    grid-area: order;
+    background-image: url("/images/home_images/pizza-1.jpg");
+    background-position: center;
+    background-size: cover;
+  }
+
+  &--booking {
+    grid-area: booking;
+    background-image: url("/images/home_images/pizza-2.jpg");
+    background-position: center;
+    background-size: cover;
+  }
+
+  &__content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -25%);
+
+    p {
+      opacity: 0;
+    }
+  }
+}
+
+.animate {
+  animation: button-animation-in 0.25s ease-in-out forwards;
+
+  p {
+    animation: button-text-appear 0.5s ease-in forwards;
+  }
+}
+
+.animate-out {
+  animation: button-animation-out 0.25s ease-in-out forwards;
+
+  p {
+    animation: button-text-disappear ease-in forwards;
+  }
+}
+
+.home__info {
+  grid-area: hours;
+  background: $color-main;
+  text-transform: uppercase;
+  border-radius: $radius;
+  height: 125px;
+  @include flex(column, center, center);
+}
+
+.main-carousel {
+  padding-block: $base-size * 6;
+}
+
+.carousel-cell {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: $base-size;
+  gap: $base-size * 2;
+  max-height: 250px;
+}
+
+.flickity-page-dots {
+  bottom: $base-size * 2;
+}
+
+.carousel-image {
+  height: 250px;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
+.home__gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $base-size;
+  padding-block: $base-size * 6;
+}
+
+.gallery-image {
+  position: relative;
+
+  img {
+    aspect-ratio: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: $radius;
+  }
+
+  &:hover::before {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    content: '';
+    background: $color-fadeout;
+    animation: image-fade 0.25s ease-in forwards;
+  }
+
+  &:hover::after {
+    animation: icon-transition 0.25s ease-in forwards;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f004  \f1e0";
+    letter-spacing: $base-size * 0.5;
+    color: $color-light;
+    font-size: 1.5rem;
+    transform: translate(-50%, -50%);
+  }
+}

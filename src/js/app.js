@@ -53,11 +53,20 @@ const app = {
     thisApp.booking = new Booking(bookingContainer);
   },
 
+  initHome: function () {
+    const thisApp = this;
+    const homeContainer = document.querySelector(select.containerOf.home);
+    thisApp.home = new Home(homeContainer, thisApp.data.gallery);
+  },
+
   initData: function () {
     const thisApp = this;
-    const url = `${settings.db.url}/${settings.db.products}`;
+    const urls = {
+      products: `${settings.db.url}/${settings.db.products}`,
+      gallery: `${settings.db.url}/${settings.db.gallery}`,
+    };
     thisApp.data = {};
-    fetch(url)
+    fetch(urls.products)
       .then(utils.handleErrors)
       .then(parsedResponse => {
         thisApp.data.products = parsedResponse;
@@ -65,7 +74,16 @@ const app = {
       })
       .catch(function(error) {
         utils.displayError(error);
-      }); 
+      });
+    fetch(urls.gallery)
+      .then(utils.handleErrors)
+      .then(parsedResponse => {
+        thisApp.data.gallery = parsedResponse;
+        thisApp.initHome();
+      })
+      .catch(function(error) {
+        utils.displayError(error);
+      });  
   },
   initMenu: function () {
     const thisApp = this;
@@ -89,7 +107,6 @@ const app = {
     thisApp.initCart();
     thisApp.initPages();
     thisApp.initBooking();
-    thisApp.initHome();
   },
 };
 
