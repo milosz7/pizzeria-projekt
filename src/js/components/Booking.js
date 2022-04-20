@@ -37,7 +37,9 @@ class Booking {
     const thisBooking = this;
 
     const startDate = `${settings.db.dateStartParamKey}=${utils.dateToStr(thisBooking.datePickerWidget.minDate)}`;
-    const endDate = `${settings.db.dateEndParamKey}=${utils.dateToStr(utils.addDays(thisBooking.datePickerWidget.minDate, settings.datePicker.maxDaysInFuture))}`;
+    const endDate = `${settings.db.dateEndParamKey}=${utils.dateToStr(
+      utils.addDays(thisBooking.datePickerWidget.minDate, settings.datePicker.maxDaysInFuture)
+    )}`;
 
     const linkPartials = {
       bookings: [
@@ -114,17 +116,18 @@ class Booking {
     const thisBooking = this;
     const reservationStart = utils.hourToNumber(hour);
     const reservationEnd = reservationStart + duration;
-    const bookedPeriods = (reservationEnd - reservationStart) / 0.5;
+    const reservationStep = settings.hours.reservationStep;
+    const bookedPeriods = (reservationEnd - reservationStart) / reservationStep;
     if (!thisBooking.booked.hasOwnProperty([date])) {
       thisBooking.booked[date] = {};
       for (let i = 0; i < bookedPeriods; i++) {
-        const hourToCheck = reservationStart + 0.5 * i;
+        const hourToCheck = reservationStart + reservationStep * i;
         const tableID = [table];
         utils.createPropIfUndefined(thisBooking.booked[date], hourToCheck, tableID);
       }
     } else {
       for (let i = 0; i < bookedPeriods; i++) {
-        const hourToCheck = reservationStart + 0.5 * i;
+        const hourToCheck = reservationStart + reservationStep * i;
         if (thisBooking.booked[date].hasOwnProperty(hourToCheck)) {
           const tableID = table;
           thisBooking.booked[date][hourToCheck].push(tableID);
@@ -151,7 +154,11 @@ class Booking {
       const tableID = parseInt(table.getAttribute(settings.booking.tableIdAttribute), 10);
       const reservationData = thisBooking.booked[chosenDate];
       for (let hours in reservationData) {
-        if ((reservationData[hours]).includes(tableID) && parseFloat(hours) >= reservationStart && parseFloat(hours) < reservationEnd) {
+        if (
+          reservationData[hours].includes(tableID) &&
+          parseFloat(hours) >= reservationStart &&
+          parseFloat(hours) < reservationEnd
+        ) {
           table.classList.add(classNames.booking.tableBooked);
         }
       }
@@ -167,12 +174,13 @@ class Booking {
     const thisBooking = this;
     const sliderElem = thisBooking.wrapper.querySelector(select.widgets.hourPicker.sliderElem);
     const hourRange = settings.hours.close - settings.hours.open;
+    const reservationStep = settings.hours.reservationStep;
     let sliderStyle = '';
-    for (let i = settings.hours.open; i <= settings.hours.close; i += 0.5) {
+    for (let i = settings.hours.open; i <= settings.hours.close; i += reservationStep) {
       const hourToCheck = thisBooking.booked[date][i];
       const numberOfTables = settings.booking.numberOfTables;
       const rangeStart = Math.round((i - hourRange) / hourRange * 100);
-      const rangeEnd = Math.round((i + 0.5 - hourRange) / hourRange * 100);
+      const rangeEnd = Math.round((i + reservationStep - hourRange) / hourRange * 100);
       if (hourToCheck && hourToCheck.length < numberOfTables - 1 || hourToCheck === undefined) {
         if (rangeEnd < settings.hours.maxPercentage) {
           sliderStyle += `green ${rangeStart}% ${rangeEnd}%, `;
@@ -215,11 +223,20 @@ class Booking {
 
   validateBooking() {
     const thisBooking = this;
-    thisBooking.dom.phoneInput.classList.toggle(classNames.booking.error, !thisBooking.dom.phoneInput.value.match(/^\d{9}$/));
-    thisBooking.dom.addressInput.classList.toggle(classNames.booking.error, thisBooking.dom.addressInput.value.length < 5);
-    if (!thisBooking.dom.phoneInput.value.match(/^\d{9}$/)  ||
-       (thisBooking.selectedTable === false) || 
-       (thisBooking.dom.addressInput.value.length < 5)) {
+    const addressMinLength = settings.booking.addressLengthMin;
+    thisBooking.dom.phoneInput.classList.toggle(
+      classNames.booking.error,
+      !thisBooking.dom.phoneInput.value.match(/^\d{9}$/)
+    );
+    thisBooking.dom.addressInput.classList.toggle(
+      classNames.booking.error,
+      thisBooking.dom.addressInput.value.length < addressMinLength
+    );
+    if (
+      !thisBooking.dom.phoneInput.value.match(/^\d{9}$/) ||
+      thisBooking.selectedTable === false ||
+      thisBooking.dom.addressInput.value.length < addressMinLength
+    ) {
       thisBooking.dom.buttonSubmit.disabled = true;
     } else {
       thisBooking.dom.buttonSubmit.disabled = false;

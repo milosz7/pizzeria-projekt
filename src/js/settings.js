@@ -149,6 +149,7 @@ export const settings = {
   hours: {
     open: 12,
     close: 24,
+    reservationStep: 0.5,
     maxPercentage: 100,
   },
   datePicker: {
@@ -157,6 +158,7 @@ export const settings = {
   booking: {
     tableIdAttribute: 'data-table',
     numberOfTables: 3,
+    addressLengthMin: 5,
   },
 };
 
